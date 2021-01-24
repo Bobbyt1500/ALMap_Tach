@@ -2,4 +2,4 @@ This XPlane plugin is made with the XPLM SDK and is a 2d manifold pressure and t
 
 It is modeled after the Aerospace Logic Manifold Pressure & and Tachometer
 
-**It is not intended to be used**
+**It is not intended to be downloaded and used**
