@@ -18,12 +18,12 @@ static XPLMWindowID	window_id;
 const float radsec_revmin_conversion_factor = 9.5493;
 
 
-// Callbacks we will register when we create our window
+// Callbacks must be declared
 void				window_draw_callback(XPLMWindowID in_window_id, void* in_refcon);
-int					dummy_mouse_handler(XPLMWindowID in_window_id, int x, int y, int is_down, void* in_refcon) { return 0; }
-XPLMCursorStatus	dummy_cursor_status_handler(XPLMWindowID in_window_id, int x, int y, void* in_refcon) { return xplm_CursorDefault; }
-int					dummy_wheel_handler(XPLMWindowID in_window_id, int x, int y, int wheel, int clicks, void* in_refcon) { return 0; }
-void				dummy_key_handler(XPLMWindowID in_window_id, char key, XPLMKeyFlags flags, char virtual_key, void* in_refcon, int losing_focus) { }
+int					mouse_handler(XPLMWindowID in_window_id, int x, int y, int is_down, void* in_refcon) { return 0; }
+XPLMCursorStatus	cursor_status_handler(XPLMWindowID in_window_id, int x, int y, void* in_refcon) { return xplm_CursorDefault; }
+int					wheel_handler(XPLMWindowID in_window_id, int x, int y, int wheel, int clicks, void* in_refcon) { return 0; }
+void				key_handler(XPLMWindowID in_window_id, char key, XPLMKeyFlags flags, char virtual_key, void* in_refcon, int losing_focus) { }
 
 // Textures
 
@@ -41,11 +41,11 @@ void create_window() {
 	params.structSize = sizeof(params);
 	params.visible = 1;
 	params.drawWindowFunc = window_draw_callback;
-	params.handleMouseClickFunc = dummy_mouse_handler;
-	params.handleRightClickFunc = dummy_mouse_handler;
-	params.handleMouseWheelFunc = dummy_wheel_handler;
-	params.handleKeyFunc = dummy_key_handler;
-	params.handleCursorFunc = dummy_cursor_status_handler;
+	params.handleMouseClickFunc = mouse_handler;
+	params.handleRightClickFunc = mouse_handler;
+	params.handleMouseWheelFunc = wheel_handler;
+	params.handleKeyFunc = key_handler;
+	params.handleCursorFunc = cursor_status_handler;
 	params.refcon = NULL;
 	params.layer = xplm_WindowLayerFloatingWindows;
 	params.decorateAsFloatingWindow = xplm_WindowDecorationRoundRectangle;
@@ -58,7 +58,6 @@ void create_window() {
 
 	window_id = XPLMCreateWindowEx(&params);
 
-	// Position the window as a "free" floating window, which the user can drag around
 	XPLMSetWindowPositioningMode(window_id, xplm_WindowPositionFree, -1);
 
 	XPLMSetWindowResizingLimits(window_id, 400, 400, 400, 400);
@@ -130,7 +129,6 @@ PLUGIN_API int XPluginStart(
 
 PLUGIN_API void	XPluginStop(void)
 {
-	// Since we created the window, we'll be good citizens and clean it up
 	XPLMDestroyWindow(window_id);
 	window_id = NULL;
 }
